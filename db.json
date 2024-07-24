@@ -1,0 +1,39 @@
+{
+	"rooms": [
+		{
+			"id": 1,
+			"number": 101,
+			"resident": "John Doe",
+			"status": "occupied",
+			"amenities": ["wifi", "ac"]
+		},
+		{
+			"id": 2,
+			"number": 102,
+			"resident": "Jane Smith",
+			"status": "vacant",
+			"amenities": ["heater"]
+		},
+		{
+			"id": 3,
+			"number": 103,
+			"resident": "Mike Johnson",
+			"status": "maintenance",
+			"amenities": ["wifi"]
+		},
+		{
+			"id": 4,
+			"number": 104,
+			"resident": "Anna Brown",
+			"status": "occupied",
+			"amenities": ["ac"]
+		},
+		{
+			"id": 5,
+			"number": 105,
+			"resident": "Chris Green",
+			"status": "vacant",
+			"amenities": ["wifi", "heater"]
+		}
+	]
+}
