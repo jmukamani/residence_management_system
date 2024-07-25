@@ -29,7 +29,7 @@
 		</header>
 		<main>
 			<section class="container">
-				<h2>Admin Dashboard</h2>
+				<h2>Room Management</h2>
 				<form id="filter-form" class="mb-3">
 					<div class="form-group">
 						<label for="roomStatus">Room Status:</label>
@@ -63,6 +63,42 @@
 					<tbody id="roomTableBody"></tbody>
 				</table>
 				<canvas id="statusChart" width="400" height="200"></canvas>
+			</section>
+
+			<section class="container mt-5">
+				<h2>Maintenance Requests</h2>
+				<form id="maintenance-filter-form" class="mb-3">
+					<div class="form-group">
+						<label for="requestStatus">Request Status:</label>
+						<select id="requestStatus" class="form-control">
+							<option value="">All</option>
+							<option value="pending">Pending</option>
+							<option value="ongoing">Ongoing</option>
+							<option value="completed">Completed</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="requestRoomNumber">Room Number:</label>
+						<input
+							type="text"
+							id="requestRoomNumber"
+							class="form-control"
+							placeholder="Enter room number"
+						/>
+					</div>
+					<button type="submit" class="btn btn-primary mt-2">Filter</button>
+				</form>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Room Number</th>
+							<th>Issue</th>
+							<th>Status</th>
+							<th>Notes</th>
+						</tr>
+					</thead>
+					<tbody id="maintenanceTableBody"></tbody>
+				</table>
 			</section>
 		</main>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

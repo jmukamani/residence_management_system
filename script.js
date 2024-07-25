@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 	class Room {
-		constructor(number, resident, status, amenities) {
+		constructor(id, number, resident, status, amenities) {
+			this.id = id;
 			this.number = number;
 			this.resident = resident;
 			this.status = status;
@@ -19,11 +20,39 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	class MaintenanceRequest {
+		constructor(id, roomNumber, issue, status, notes) {
+			this.id = id;
+			this.roomNumber = roomNumber;
+			this.issue = issue;
+			this.status = status;
+			this.notes = notes;
+		}
+
+		render() {
+			return `
+                <tr>
+                    <td>${this.roomNumber}</td>
+                    <td>${this.issue}</td>
+                    <td>${this.status}</td>
+                    <td>${this.notes}</td>
+                </tr>
+            `;
+		}
+	}
+
 	class RoomManager {
 		constructor() {
 			this.rooms = [];
+			this.maintenanceRequests = [];
 			this.roomTableBody = document.getElementById("roomTableBody");
+			this.maintenanceTableBody = document.getElementById(
+				"maintenanceTableBody"
+			);
 			this.filterForm = document.getElementById("filter-form");
+			this.maintenanceFilterForm = document.getElementById(
+				"maintenance-filter-form"
+			);
 			this.statusChart = null;
 
 			this.filterForm.addEventListener("submit", (event) => {
@@ -31,7 +60,13 @@ document.addEventListener("DOMContentLoaded", () => {
 				this.filterRooms();
 			});
 
+			this.maintenanceFilterForm.addEventListener("submit", (event) => {
+				event.preventDefault();
+				this.filterMaintenanceRequests();
+			});
+
 			this.fetchRooms();
+			this.fetchMaintenanceRequests();
 		}
 
 		async fetchRooms() {
@@ -44,7 +79,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 				this.rooms = response.map(
 					(room) =>
-						new Room(room.number, room.resident, room.status, room.amenities)
+						new Room(
+							room.id,
+							room.number,
+							room.resident,
+							room.status,
+							room.amenities
+						)
 				);
 				this.renderRooms(this.rooms);
 				this.renderChart();
@@ -53,9 +94,39 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		}
 
+		async fetchMaintenanceRequests() {
+			try {
+				const response = await $.ajax({
+					url: "http://localhost:3000/maintenanceRequests",
+					method: "GET",
+					dataType: "json",
+				});
+
+				this.maintenanceRequests = response.map(
+					(request) =>
+						new MaintenanceRequest(
+							request.id,
+							request.roomNumber,
+							request.issue,
+							request.status,
+							request.notes
+						)
+				);
+				this.renderMaintenanceRequests(this.maintenanceRequests);
+			} catch (error) {
+				console.error("Error fetching maintenance requests:", error);
+			}
+		}
+
 		renderRooms(rooms) {
 			this.roomTableBody.innerHTML = rooms
 				.map((room) => room.render())
+				.join("");
+		}
+
+		renderMaintenanceRequests(requests) {
+			this.maintenanceTableBody.innerHTML = requests
+				.map((request) => request.render())
 				.join("");
 		}
 
@@ -77,6 +148,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			this.renderRooms(filteredRooms);
 			this.renderChart(filteredRooms);
+		}
+
+		filterMaintenanceRequests() {
+			const status = document.getElementById("requestStatus").value;
+			const roomNumber = document.getElementById("requestRoomNumber").value;
+
+			let filteredRequests = this.maintenanceRequests;
+
+			if (status) {
+				filteredRequests = filteredRequests.filter(
+					(request) => request.status === status
+				);
+			}
+
+			if (roomNumber) {
+				filteredRequests = filteredRequests.filter(
+					(request) => request.roomNumber === roomNumber
+				);
+			}
+
+			this.renderMaintenanceRequests(filteredRequests);
 		}
 
 		renderChart(filteredRooms = this.rooms) {
@@ -103,13 +195,13 @@ document.addEventListener("DOMContentLoaded", () => {
 							data: data,
 							backgroundColor: [
 								"rgba(75, 192, 192, 0.2)",
-								"rgba(255, 159, 64, 0.2)",
 								"rgba(255, 99, 132, 0.2)",
+								"rgba(255, 206, 86, 0.2)",
 							],
 							borderColor: [
 								"rgba(75, 192, 192, 1)",
-								"rgba(255, 159, 64, 1)",
 								"rgba(255, 99, 132, 1)",
+								"rgba(255, 206, 86, 1)",
 							],
 							borderWidth: 1,
 						},
@@ -126,5 +218,5 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
-	const roomManager = new RoomManager();
+	new RoomManager();
 });

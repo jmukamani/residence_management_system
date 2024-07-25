@@ -35,5 +35,22 @@
 			"status": "vacant",
 			"amenities": ["wifi", "heater"]
 		}
+	],
+
+	"maintenanceRequests": [
+		{
+			"id": 1,
+			"roomNumber": "101",
+			"issue": "Leaking faucet",
+			"status": "pending",
+			"notes": "Resident reported a leaking faucet in the bathroom."
+		},
+		{
+			"id": 2,
+			"roomNumber": "102",
+			"issue": "Broken heater",
+			"status": "ongoing",
+			"notes": "Technician has been notified."
+		}
 	]
 }
