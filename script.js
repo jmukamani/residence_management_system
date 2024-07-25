@@ -41,14 +41,37 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	class Alert {
+		constructor(id, message, type, date) {
+			this.id = id;
+			this.message = message;
+			this.type = type;
+			this.date = date;
+		}
+
+		render() {
+			const alertClass =
+				this.type === "urgent"
+					? "list-group-item-danger"
+					: "list-group-item-warning";
+			return `
+                <li class="list-group-item ${alertClass}">
+                    <strong>${this.date}:</strong> ${this.message}
+                </li>
+            `;
+		}
+	}
+
 	class RoomManager {
 		constructor() {
 			this.rooms = [];
 			this.maintenanceRequests = [];
+			this.alerts = [];
 			this.roomTableBody = document.getElementById("roomTableBody");
 			this.maintenanceTableBody = document.getElementById(
 				"maintenanceTableBody"
 			);
+			this.alertsList = document.getElementById("alertsList");
 			this.filterForm = document.getElementById("filter-form");
 			this.maintenanceFilterForm = document.getElementById(
 				"maintenance-filter-form"
@@ -67,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			this.fetchRooms();
 			this.fetchMaintenanceRequests();
+			this.fetchAlerts();
 		}
 
 		async fetchRooms() {
@@ -118,6 +142,23 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		}
 
+		async fetchAlerts() {
+			try {
+				const response = await $.ajax({
+					url: "http://localhost:3000/alerts",
+					method: "GET",
+					dataType: "json",
+				});
+
+				this.alerts = response.map(
+					(alert) => new Alert(alert.id, alert.message, alert.type, alert.date)
+				);
+				this.renderAlerts(this.alerts);
+			} catch (error) {
+				console.error("Error fetching alerts:", error);
+			}
+		}
+
 		renderRooms(rooms) {
 			this.roomTableBody.innerHTML = rooms
 				.map((room) => room.render())
@@ -127,6 +168,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		renderMaintenanceRequests(requests) {
 			this.maintenanceTableBody.innerHTML = requests
 				.map((request) => request.render())
+				.join("");
+		}
+
+		renderAlerts(alerts) {
+			this.alertsList.innerHTML = alerts
+				.map((alert) => alert.render())
 				.join("");
 		}
 
@@ -147,7 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 
 			this.renderRooms(filteredRooms);
-			this.renderChart(filteredRooms);
 		}
 
 		filterMaintenanceRequests() {
@@ -171,28 +217,39 @@ document.addEventListener("DOMContentLoaded", () => {
 			this.renderMaintenanceRequests(filteredRequests);
 		}
 
-		renderChart(filteredRooms = this.rooms) {
-			const statusCounts = filteredRooms.reduce((counts, room) => {
-				counts[room.status] = (counts[room.status] || 0) + 1;
-				return counts;
-			}, {});
+		renderChart() {
+			const statusCounts = {
+				occupied: 0,
+				vacant: 0,
+				maintenance: 0,
+			};
 
-			const labels = Object.keys(statusCounts);
-			const data = Object.values(statusCounts);
+			this.rooms.forEach((room) => {
+				if (room.status === "occupied") {
+					statusCounts.occupied++;
+				} else if (room.status === "vacant") {
+					statusCounts.vacant++;
+				} else if (room.status === "maintenance") {
+					statusCounts.maintenance++;
+				}
+			});
 
+			const ctx = document.getElementById("statusChart").getContext("2d");
 			if (this.statusChart) {
 				this.statusChart.destroy();
 			}
-
-			const ctx = document.getElementById("statusChart").getContext("2d");
 			this.statusChart = new Chart(ctx, {
 				type: "bar",
 				data: {
-					labels: labels,
+					labels: ["Occupied", "Vacant", "Under Maintenance"],
 					datasets: [
 						{
-							label: "Room Status Distribution",
-							data: data,
+							label: "Room Status",
+							data: [
+								statusCounts.occupied,
+								statusCounts.vacant,
+								statusCounts.maintenance,
+							],
 							backgroundColor: [
 								"rgba(75, 192, 192, 0.2)",
 								"rgba(255, 99, 132, 0.2)",

@@ -52,5 +52,26 @@
 			"status": "ongoing",
 			"notes": "Technician has been notified."
 		}
+	],
+
+	"alerts": [
+		{
+			"id": 1,
+			"message": "Upcoming room inspection for room 101",
+			"type": "normal",
+			"date": "2024-08-01"
+		},
+		{
+			"id": 2,
+			"message": "Urgent maintenance deadline for room 102",
+			"type": "urgent",
+			"date": "2024-07-25"
+		},
+		{
+			"id": 3,
+			"message": "Resident request for room 103",
+			"type": "normal",
+			"date": "2024-07-26"
+		}
 	]
 }
