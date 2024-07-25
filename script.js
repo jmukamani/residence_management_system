@@ -76,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			this.maintenanceFilterForm = document.getElementById(
 				"maintenance-filter-form"
 			);
+			this.themeToggle = document.getElementById("themeToggle");
 			this.statusChart = null;
 
 			this.filterForm.addEventListener("submit", (event) => {
@@ -88,9 +89,14 @@ document.addEventListener("DOMContentLoaded", () => {
 				this.filterMaintenanceRequests();
 			});
 
+			this.themeToggle.addEventListener("click", () => {
+				this.toggleTheme(!document.body.classList.contains("dark-theme"));
+			});
+
 			this.fetchRooms();
 			this.fetchMaintenanceRequests();
 			this.fetchAlerts();
+			this.loadTheme();
 		}
 
 		async fetchRooms() {
@@ -271,6 +277,33 @@ document.addEventListener("DOMContentLoaded", () => {
 						},
 					},
 				},
+			});
+		}
+
+		toggleTheme(isDark) {
+			document.body.classList.toggle("dark-theme", isDark);
+			localStorage.setItem("theme", isDark ? "dark" : "light");
+			this.themeToggle.setAttribute(
+				"aria-label",
+				`Switch to ${isDark ? "light" : "dark"} theme`
+			);
+			this.themeToggle.checked = isDark;
+		}
+
+		loadTheme() {
+			const prefersDarkScheme = window.matchMedia(
+				"(prefers-color-scheme: dark)"
+			);
+			const savedTheme = localStorage.getItem("theme");
+			const isDark =
+				savedTheme === "dark" ||
+				(savedTheme === null && prefersDarkScheme.matches);
+			this.toggleTheme(isDark);
+
+			prefersDarkScheme.addListener((e) => {
+				if (localStorage.getItem("theme") === null) {
+					this.toggleTheme(e.matches);
+				}
 			});
 		}
 	}

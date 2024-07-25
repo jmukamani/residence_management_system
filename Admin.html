@@ -14,7 +14,7 @@
 		/>
 		<link rel="stylesheet" href="css/style.css" />
 	</head>
-	<body>
+	<body class="light-theme">
 		<header>
 			<nav id="navbar">
 				<h1 class="logo">
@@ -28,6 +28,19 @@
 			</nav>
 		</header>
 		<main>
+			<section class="container mt-3">
+				<h2>Theme Switcher</h2>
+				<div class="form-check form-switch">
+					<input
+						class="form-check-input"
+						type="checkbox"
+						id="themeToggle"
+						aria-label="Switch to dark theme"
+					/>
+					<label class="form-check-label" for="themeToggle">Dark Mode</label>
+				</div>
+			</section>
+
 			<section class="container">
 				<h2>Room Management</h2>
 				<form id="filter-form" class="mb-3">
