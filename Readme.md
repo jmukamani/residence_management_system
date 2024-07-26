@@ -19,15 +19,16 @@ Before setting up the project, ensure you have the following installed:
 
 ## Installation
 
-1. Clone the repository using `git clone jmukamani/residence_management_system.git
+1. Clone the repository using
+git clone jmukamani/residence_management_system.git
    cd residence_management_system
 
-2. Install dependecies
+3. Install dependecies
    npm install
    npm install json-server
    npm install sass
 
-3. Start the JSON server:
+4. Start the JSON server:
    json-server --watch db.json --port 3000
 
 4.Compile SASS to CSS:
@@ -59,7 +60,8 @@ The project uses the following technologies:
 
 ## Dashboard Functionalities
 
-# Navigation: Use the navigation bar at the top to switch between different sections such as Home, Admin, and Student.
+# Navigation: 
+Use the navigation bar at the top to switch between different sections such as Home, Admin, and Student.
 
 # Home Page:
 
