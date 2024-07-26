@@ -1,0 +1,39 @@
+// scss/_base.scss
+
+body {
+	font-family: Arial, sans-serif;
+	font-size: $font-size-base;
+	margin: 0;
+	padding: 0;
+	background-color: $light-color;
+	color: $dark-color;
+
+	&.dark-theme {
+		background-color: $dark-color;
+		color: $light-color;
+	}
+}
+
+a {
+	color: $primary-color;
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}

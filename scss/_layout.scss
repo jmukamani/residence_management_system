@@ -1,0 +1,74 @@
+// scss/_layout.scss
+
+header {
+	background-color: $primary-color;
+	padding: 10px 0;
+
+	.logo {
+		margin: 0;
+		font-size: $font-size-lg;
+		color: $light-color;
+	}
+
+	nav {
+		@include flex-center;
+
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: flex;
+
+			li {
+				margin: 0 15px;
+
+				a {
+					color: $light-color;
+					font-size: $font-size-base;
+				}
+			}
+		}
+	}
+}
+
+main {
+	padding: 20px 0;
+
+	section {
+		margin-bottom: 20px;
+	}
+
+	#showcase {
+		@include flex-center;
+		flex-direction: column;
+		text-align: center;
+
+		.text-primary {
+			color: $primary-color;
+		}
+
+		.lead {
+			font-size: $font-size-lg;
+		}
+
+		.btn {
+			padding: 10px 20px;
+			background-color: $primary-color;
+			color: $light-color;
+			border: none;
+			cursor: pointer;
+			font-size: $font-size-base;
+
+			&:hover {
+				background-color: darken($primary-color, 10%);
+			}
+		}
+	}
+}
+
+footer {
+	background-color: $secondary-color;
+	padding: 20px 0;
+	text-align: center;
+	color: $light-color;
+}
